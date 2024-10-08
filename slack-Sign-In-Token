@@ -1,0 +1,30 @@
+#!/bin/bash
+##########################################################################
+Install Slack Sign-In Token
+
+Start by downloading the Slack Sign-In Token from Slack Admin.
+
+Zip the Slack Sign-In Token into a zip, set that zip file as a custom app
+in Kandji. Set the extraction location to /tmp. Set this script as a
+post-install script.
+
+The script will move the extracted file to the logged-in user's Downloads
+folder. The Sign-In Token helps users sign into the correct Slack workspace.
+
+##########################################################################
+
+# Get the currently logged-in user's username
+USER=$(/usr/sbin/scutil <<< "show State:/Users/ConsoleUser" | awk '/Name :/ && ! /loginwindow/ {print $3}')
+
+# Define the source and destination paths
+SRC="/tmp/Signin.slacktoken"
+DEST="/Users/$USER/Downloads/Signin.slacktoken"
+
+# Check if the file exists in /tmp
+if [ -f "$SRC" ]; then
+    # Move the file to the user's Downloads folder
+    mv "$SRC" "$DEST"
+    echo "File moved to $DEST"
+else
+    echo "File not found in /tmp"
+fi
